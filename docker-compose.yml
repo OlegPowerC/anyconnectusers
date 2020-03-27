@@ -1,0 +1,35 @@
+version: '3.1'
+
+networks:
+  netflow_network:
+    driver: bridge
+services:
+  db:
+    image: postgres
+    networks:
+      netflow_network:
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: netflow
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    ports:
+      - 5442:5432
+  anyconnectuses:
+    image: anyconnectusers
+    depends_on:
+      - db
+    networks:
+      netflow_network:
+    restart: always
+    environment:
+      PSQLIP: db
+      PSQLPORT: 5432
+      PSQLUSER: netflow
+      PSQLPASSWORD: netflow
+      PSQLDBNAME: netflow
+      TABLENAME: anyconnect
+    ports:
+      - 7002:7002
