@@ -18,7 +18,7 @@ services:
     ports:
       - 5442:5432
   anyconnectuses:
-    image: anyconnectusers
+    image: ciscoliveru/anyconnectusers:latest
     depends_on:
       - db
     networks:

@@ -20,7 +20,7 @@ services:
       - ./data/db:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
-      - 5442:5432
+      - 5442:5432 <----------- External PSQL port for connect API services 
   anyconnectuses:
     image: ciscoliveru/anyconnectusers:latest
     depends_on:
@@ -49,9 +49,11 @@ event manager applet EndSession
  event syslog id 113019 occurs 1
  action 0 cli command "call-home send alert-group snapshot profile VPNSH"
  output none
- 
+
+service call-home
 call-home
  alert-group-config snapshot
   add-command "show vpn-sessiondb anyconnect"
  profile VPNSH
-   destination address http http://<Your server IP address>:7002/vpnsession msg-format xml
+   destination transport-method http
+   destination address http http://<Your docker host IP address>:7002/vpnsession msg-format xml
