@@ -38,8 +38,31 @@ services:
       TABLENAME: anyconnect
     ports:
       - 7002:7002
+  anyconnectusesapi:
+    image: ciscoliveru/anyconnectusersapi:latest
+    networks:
+      netflow_network:
+    restart: always
+    environment:
+      PSQLIP: db
+      PSQLPORT: 5432
+      PSQLUSER: netflow
+      PSQLPASSWORD: netflow
+      DEBUGMODE: 0
+      PSQLDBNAME: netflow
+      TABLENAME: anyconnect
+    ports:
+      - 8182:8181 <----------- Web UI port
   
 Config on ASA
+
+logging list SSLUSERS2 level informational
+logging list SSLUSERS2 message 605005
+logging list SSLUSERS2 message 611103
+logging list SSLUSERS2 message 113039
+logging list SSLUSERS2 message 722051
+logging trap SSLUSERS2
+logging host inside <Your syslog server>
 
 event manager applet StartSession
  event syslog id 722051 occurs 1
