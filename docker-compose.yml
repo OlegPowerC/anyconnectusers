@@ -17,6 +17,21 @@ services:
       - ./init:/docker-entrypoint-initdb.d
     ports:
       - 5442:5432
+  anyconnectusesapi:
+    image: ciscoliveru/anyconnectusersapi:latest
+    networks:
+      netflow_network:
+    restart: always
+    environment:
+      PSQLIP: db
+      PSQLPORT: 5432
+      PSQLUSER: netflow
+      PSQLPASSWORD: netflow
+      DEBUGMODE: 0
+      PSQLDBNAME: netflow
+      TABLENAME: anyconnect
+    ports:
+      - 8182:8181
   anyconnectuses:
     image: ciscoliveru/anyconnectusers:latest
     depends_on:
@@ -29,6 +44,7 @@ services:
       PSQLPORT: 5432
       PSQLUSER: netflow
       PSQLPASSWORD: netflow
+      DEBUGMODE: 200
       PSQLDBNAME: netflow
       TABLENAME: anyconnect
     ports:
